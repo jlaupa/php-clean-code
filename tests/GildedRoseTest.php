@@ -11,83 +11,73 @@ class GildedRoseTest extends TestCase
     /**
      * @test
      */
-    public function itemsDegradeQuality()
+    public function itemsDegradeQuality(): void
     {
-        $items = [new Item('', 1, 5)];
-
-  		$gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-        $this->assertEquals(4, $items[0]->quality);
+        $item = new Item('', 1, 5);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals(4, $item->quality);
   	}
 
     /**
      * @test
      */
-    public function itemsDegradeDoubleQualityOnceTheSellInDateHasPass()
+    public function itemsDegradeDoubleQualityOnceTheSellInDateHasPass(): void
     {
-  		$items = [new Item('', -1, 5)];
-
-  		$gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-  		$this->assertEquals(3, $items[0]->quality);
+        $item = new Item('', -1, 5);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals(3, $item->quality);
   	}
 
     /**
      * @test
      */
-    public function itemsCannotHaveNegativeQuality()
+    public function itemsCannotHaveNegativeQuality(): void
     {
-  		$items = [new Item('', 0, 0)];
-
-  		$gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-  		$this->assertEquals(0, $items[0]->quality);
+        $item = new Item('', 0, 0);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals(0, $item->quality);
   	}
 
     /**
      * @test
      */
-    public function agedBrieIncreasesQualityOverTime()
+    public function agedBrieIncreasesQualityOverTime(): void
     {
-  		$items = [new Item('Aged Brie', 0, 5)];
-
-        $gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-  		$this->assertEquals(7, $items[0]->quality);
+        $item = new Item('Aged Brie', 0, 5);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals(7, $item->quality);
   	}
 
     /**
      * @test
      */
-    public function qualityCannotBeGreaterThan50()
+    public function qualityCannotBeGreaterThan50(): void
     {
-  		$items = [new Item('Aged Brie', 0, 50)];
+        $item = new Item('Aged Brie', 0, 50);
 
-        $gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
 
-  		$this->assertEquals(50, $items[0]->quality);
+        self::assertEquals(50, $item->quality);
   	}
 
     /**
      * @test
      */
-    public function sulfurasDoesNotChange()
+    public function sulfurasDoesNotChange(): void
     {
-  		$items = [new Item('Sulfuras, Hand of Ragnaros', 10, 10)];
-
-        $gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-  		$this->assertEquals(10, $items[0]->sell_in);
-  		$this->assertEquals(10, $items[0]->quality);
+        $item = new Item('Sulfuras, Hand of Ragnaros', 10, 10);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals(10, $item->sell_in);
+        self::assertEquals(10, $item->quality);
   	}
 
-    public static function backstageRules()
+    public static function backstageRules(): array
     {
   		return [
   			'incr. 1 if sellIn > 10' => [11, 10, 11],
@@ -103,14 +93,15 @@ class GildedRoseTest extends TestCase
     /**
      * @dataProvider backstageRules
      * @test
+     * @param int $sellIn
+     * @param int $quality
+     * @param int $expected
      */
-    public function backstageQualityIncreaseOverTimeWithCertainRules($sellIn, $quality, $expected)
+    public function backstageQualityIncreaseOverTimeWithCertainRules(int $sellIn, int $quality, int $expected): void
     {
-  		$items = [new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, $quality)];
-
-        $gilded_rose = new GildedRose($items);
-        $gilded_rose->update_quality();
-
-  		$this->assertEquals($expected, $items[0]->quality);
+        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, $quality);
+        $gildedRose = new GildedRose([$item]);
+        $gildedRose->updateQuality();
+        self::assertEquals($expected, $item->quality);
   	}
 }
