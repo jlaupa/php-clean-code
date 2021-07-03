@@ -46,7 +46,7 @@ class GildedRoseTest extends TestCase
      */
     public function agedBrieIncreasesQualityOverTime(): void
     {
-        $item = new Item('Aged Brie', 0, 5);
+        $item = new Item(Item::AGED, 0, 5);
         $gildedRose = new GildedRose([$item]);
         $gildedRose->updateQuality();
         self::assertEquals(7, $item->quality);
@@ -57,11 +57,9 @@ class GildedRoseTest extends TestCase
      */
     public function qualityCannotBeGreaterThan50(): void
     {
-        $item = new Item('Aged Brie', 0, 50);
-
+        $item = new Item(Item::AGED, 0, 50);
         $gildedRose = new GildedRose([$item]);
         $gildedRose->updateQuality();
-
         self::assertEquals(50, $item->quality);
   	}
 
@@ -70,13 +68,16 @@ class GildedRoseTest extends TestCase
      */
     public function sulfurasDoesNotChange(): void
     {
-        $item = new Item('Sulfuras, Hand of Ragnaros', 10, 10);
+        $item = new Item(Item::SULFURAS, 10, 10);
         $gildedRose = new GildedRose([$item]);
         $gildedRose->updateQuality();
         self::assertEquals(10, $item->sell_in);
         self::assertEquals(10, $item->quality);
   	}
 
+    /**
+     * @return int[][]
+     */
     public static function backstageRules(): array
     {
   		return [
@@ -99,7 +100,7 @@ class GildedRoseTest extends TestCase
      */
     public function backstageQualityIncreaseOverTimeWithCertainRules(int $sellIn, int $quality, int $expected): void
     {
-        $item = new Item('Backstage passes to a TAFKAL80ETC concert', $sellIn, $quality);
+        $item = new Item(Item::BACKSTAGE, $sellIn, $quality);
         $gildedRose = new GildedRose([$item]);
         $gildedRose->updateQuality();
         self::assertEquals($expected, $item->quality);
